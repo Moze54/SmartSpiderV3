@@ -7,6 +7,7 @@ import time
 from typing import Dict, List
 from urllib.parse import urljoin
 
+import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -32,25 +33,34 @@ class BrowserSpider(BaseSpider):
         """设置浏览器驱动"""
         try:
             chrome_options = Options()
-            
+
             # 基本配置
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.add_argument('--disable-blink-features=AutomationControlled')
             chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
             chrome_options.add_experimental_option('useAutomationExtension', False)
-            
+
+            # 无头模式
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--disable-gpu')
+
+            # 不使用用户数据目录，避免冲突问题
+            chrome_options.add_argument('--disable-extensions')
+            chrome_options.add_argument('--disable-plugins')
+            chrome_options.add_argument('--disable-background-timer-throttling')
+            chrome_options.add_argument('--disable-renderer-backgrounding')
+            chrome_options.add_argument('--disable-backgrounding-occluded-windows')
+            chrome_options.add_argument('--disable-features=VizDisplayCompositor')
+            chrome_options.add_argument('--disable-software-rasterizer')
+
             # 用户代理
             user_agent = self.config.user_agent or (
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
                 '(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             )
             chrome_options.add_argument(f'--user-agent={user_agent}')
-            
-            # 无头模式（默认启用）
-            if not logger.isEnabledFor(logger.DEBUG):
-                chrome_options.add_argument('--headless')
-            
+                        
             # 代理
             if self.config.proxy:
                 chrome_options.add_argument(f'--proxy-server={self.config.proxy}')
