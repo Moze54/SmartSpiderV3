@@ -89,8 +89,8 @@ class CookieLoader:
         
         has_key_cookies = any(name in cookie_names for name in required_cookies)
         if has_key_cookies:
-            logger.info("✅ 检测到关键cookie，可能已登录")
+            logger.info("检测到关键cookie，可能已登录")
         else:
-            logger.warning("⚠️  未检测到关键cookie，可能未登录")
+            logger.warning("未检测到关键cookie，可能未登录")
         
         return has_key_cookies

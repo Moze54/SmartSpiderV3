@@ -40,6 +40,12 @@ def setup_logger(name: str = 'smart_spider', level: int = None, verbose: bool = 
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(formatter)
     console_handler.setLevel(level)
+
+    # 设置控制台编码为utf-8
+    if hasattr(console_handler.stream, 'reconfigure'):
+        console_handler.stream.reconfigure(encoding='utf-8')
+    elif hasattr(console_handler.stream, 'buffer'):
+        console_handler.stream = console_handler.stream.buffer
     
     # 文件处理器
     file_handler = logging.FileHandler(log_file, encoding='utf-8')

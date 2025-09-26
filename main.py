@@ -38,12 +38,12 @@ def main():
             return 1
         
         # 创建爬虫
-        logger.info(f"🚀 启动爬虫，配置文件: {config_path}")
+        logger.info(f"启动爬虫，配置文件: {config_path}")
         spider = SpiderFactory.create_spider(str(config_path))
         
         # 如果是cookie检查模式
         if args.check_cookies:
-            logger.info("🔍 Cookie检查模式")
+            logger.info("Cookie检查模式")
             if hasattr(spider, 'session'):
                 cookies = spider.session.cookies
                 logger.info(f"当前cookies数量: {len(cookies)}")
@@ -52,34 +52,34 @@ def main():
             return 0
         
         # 运行爬虫
-        logger.info("🕷️  开始爬取数据...")
+        logger.info("开始爬取数据...")
         results = spider.crawl()
         
         if results:
-            logger.info(f"✅ 爬取完成! 共获取 {len(results)} 条数据")
+            logger.info(f"爬取完成! 共获取 {len(results)} 条数据")
             
             # 检查结果质量
             if results and len(results[0]) <= 2:  # 如果字段很少，可能是登录失败
-                logger.warning("⚠️  获取的字段较少，可能登录未成功")
+                logger.warning("获取的字段较少，可能登录未成功")
             
             # 保存结果
             saver = DataSaver()
             output_file = saver.save(results, spider.config.name, args.output)
-            logger.info(f"💾 数据已保存到: {output_file}")
+            logger.info(f"数据已保存到: {output_file}")
             
             # 显示预览
             saver.preview(results)
         else:
-            logger.warning("⚠️  未获取到任何数据")
-            logger.info("💡 建议: 检查cookie文件是否有效，或增加--check-cookies参数查看cookies")
+            logger.warning("未获取到任何数据")
+            logger.info("建议: 检查cookie文件是否有效，或增加--check-cookies参数查看cookies")
         
         return 0
         
     except KeyboardInterrupt:
-        logger.info("🛑 用户中断爬取")
+        logger.info("用户中断爬取")
         return 1
     except Exception as e:
-        logger.error(f"❌ 爬取失败: {e}")
+        logger.error(f"爬取失败: {e}")
         return 1
 
 if __name__ == "__main__":
