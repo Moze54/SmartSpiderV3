@@ -6,6 +6,7 @@
 from .base_spider import SpiderConfig
 from .api_spider import ApiSpider
 from .browser_spider import BrowserSpider
+from .concurrent_spider import ConcurrentBrowserSpider
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -38,7 +39,11 @@ class SpiderFactory:
             if config.mode == 'api':
                 return ApiSpider(config)
             elif config.mode == 'browser':
-                return BrowserSpider(config)
+                # 如果配置了并发数大于1，使用并发爬虫
+                if getattr(config, 'concurrent', 1) > 1:
+                    return ConcurrentBrowserSpider(config)
+                else:
+                    return BrowserSpider(config)
             else:
                 raise ValueError(f"不支持的爬虫模式: {config.mode}")
                 

@@ -25,8 +25,15 @@ class SpiderConfig:
     delay: float = 1.0
     timeout: int = 30
     max_pages: int = 10
+    max_total_items: int = 0  # 最大数据总量，0表示不限制
     proxy: Optional[str] = None
     user_agent: Optional[str] = None
+    concurrent: int = 1  # 并发线程数
+    retry_times: int = 3  # 重试次数
+    custom_pagination: Optional[Dict] = None  # 自定义分页配置
+    filters: Optional[Dict] = None  # 数据过滤配置
+    output_format: str = 'json'  # 输出格式：json, csv, xlsx
+    output_path: Optional[str] = None  # 输出路径
 
     @classmethod
     def from_json(cls, json_path: str) -> 'SpiderConfig':
